@@ -35,7 +35,7 @@ public class GameController : MonoBehaviour
 
     int _waveCount = 0;
 
-    const float SPAWN_WAIT_DIFICULTY = 0.4f;
+    const float SPAWN_WAIT_DIFFICULTY = 0.4f;
 
     List<GameObject> _hazards = new List<GameObject>();
     List<GameObject> _explosions = new List<GameObject>();
@@ -111,6 +111,7 @@ public class GameController : MonoBehaviour
                 yield return new WaitForSeconds(WaveWait);
             }
         }
+        RestartBtn.gameObject.SetActive(true);
     }
 
     IEnumerator SpreadWaveHazards()
@@ -119,7 +120,7 @@ public class GameController : MonoBehaviour
 
         _hazards.Clear();
         _waveCount++;
-        SpawnWait -= SPAWN_WAIT_DIFICULTY;
+        SpawnWait -= SPAWN_WAIT_DIFFICULTY;
 
         WaveCountText.gameObject.SetActive(true);
         UpdateWaveCount();
@@ -135,8 +136,7 @@ public class GameController : MonoBehaviour
             InstantiateHazard();
             if (IsGameOver)
             {
-                RestartBtn.gameObject.SetActive(true);
-                break;
+               break;
             }
         }
     }
