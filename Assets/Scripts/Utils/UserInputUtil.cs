@@ -27,6 +27,12 @@ public class UserInputUtil
         return new Vector3(GetHorizontalMove(), 0, GetVerticalMove());
     }
 
+    public static Vector3 GetPlayerJoystickMove(Joystick joystick)
+    {
+        
+        return new Vector3(joystick.Horizontal, 0, joystick.Vertical);
+    }
+
     public static bool IsScreenTapped
     {
         get
