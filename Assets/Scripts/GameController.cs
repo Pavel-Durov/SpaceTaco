@@ -58,6 +58,8 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
+        LevelManager.Init(Hazard, Boundary.transform.localScale.x, Boundary.transform.localScale.z);
+
         SetAudioSources();
 
         WaveCountText.gameObject.SetActive(false);
@@ -116,39 +118,42 @@ public class GameController : MonoBehaviour
 
     IEnumerator SpreadWaveHazards()
     {
-        ClearExplosions();
-
-        _hazards.Clear();
-        _waveCount++;
-        SpawnWait -= SPAWN_WAIT_DIFFICULTY;
-
-        WaveCountText.gameObject.SetActive(true);
-        UpdateWaveCount();
-
-        yield return new WaitForSeconds(WaveWait);
-        WaveCountText.gameObject.SetActive(false);
-
-        HazardCount = HazardCount * _waveCount;
-
-        for (int i = 0; i < HazardCount; i++)
+        foreach (var wave in LevelManager.CurrentLevel.Waves)
         {
-            yield return new WaitForSeconds(SpawnWait);
-            InstantiateHazard();
-            if (IsGameOver)
+            yield return new WaitForSeconds(wave.SpawnDelaySec);
+
+            ClearExplosions();
+
+            _hazards.Clear();
+            _waveCount++;
+            SpawnWait -= SPAWN_WAIT_DIFFICULTY;
+
+            WaveCountText.gameObject.SetActive(true);
+            UpdateWaveCount();
+
+            yield return new WaitForSeconds(WaveWait);
+            WaveCountText.gameObject.SetActive(false);
+
+            HazardCount = HazardCount * _waveCount;
+
+            for (int i = 0; i < wave.WaveSize; i++)
             {
-               break;
+
+                yield return new WaitForSeconds(wave.SpawnDelaySec);
+                _hazards.Add(InstantiateHazard(wave));
+                if (IsGameOver)
+                {
+                    break;
+                }
             }
         }
+        LevelManager.LevelEnd();
     }
 
-    void InstantiateHazard()
+    GameObject InstantiateHazard(Wave wave)
     {
-        var halfScreen = Boundary.transform.localScale.x / 2;
-        var x = Random.Range(-halfScreen, halfScreen);
-        var z = Boundary.transform.localScale.z / 2;
-        Vector3 spawnPosition = new Vector3(x, 0, z);
-        var hazard = Instantiate(Hazard, spawnPosition, Quaternion.identity);
-        _hazards.Add(hazard);
+        return Instantiate(wave.Hazard, wave.GetNextSpawnPosition(), Quaternion.identity);
+
     }
 
     public void PlayerHitHazard()
