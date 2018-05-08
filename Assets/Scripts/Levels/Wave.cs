@@ -1,30 +1,61 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 public class Wave
 {
-    
+
     public float SpawnDelaySec { get; private set; }
-    public int WaveSize { get; private set; }
-    public GameObject Hazard { get; private set; }
 
-    private float _xBound;
-    private float _yBound;
-
-    public Wave(int waveSize, GameObject hazard, float xBound, float yBound, float spawnDelaySec)
+    public int WaveSize
     {
+        get
+        {
+            return Spread.ItemsCount;
+        }
+    }
+
+    public SpreadConfig Spread { get; private set; }
+    public int Number { get; private set; }
+    LinkedList<Vector3> _positions = new LinkedList<Vector3>();
+    LinkedListNode<Vector3> _positon;
+
+    const int DEFAULT_SPEED = -5;
+    public int Speed { get; private set; }
+
+    public Wave(int number, float spawnDelaySec, SpreadConfig spread, int speed = DEFAULT_SPEED)
+    {
+        Number = number;
         SpawnDelaySec = spawnDelaySec;
-        WaveSize = waveSize;
-        Hazard = hazard;
-        _xBound = xBound;
-        _yBound = yBound;
-   }
+        Spread = spread;
+        SetPositions();
+        Speed = speed;
+    }
 
-    public Vector3 GetNextSpawnPosition()
+    void SetPositions()
     {
-        var halfScreen = _xBound / 2;
-        var x = UnityEngine.Random.Range(-halfScreen, halfScreen);
-        return new Vector3(x, 0, _yBound / 2);
+        _positions = WaveSpreadUtil.SpreadEvenRows(Spread);
+    }
+
+    public bool NextSpawnPosition(out Vector3 position)
+    {
+        bool sucess = false;
+        if (_positon == null)
+        {
+            _positon = _positions.First;
+            sucess = true;
+        }
+        else
+        {
+            if (_positon.Next != null)
+            {
+                _positon = _positon.Next;
+                sucess = true;
+            }
+        }
+
+        position = _positon.Value;
+        return sucess;
     }
 }

@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 public class LevelManager
 {
@@ -12,19 +13,28 @@ public class LevelManager
     {
         Levels = new List<Level>();
 
-        Levels.Add(new Level(new List<Wave>(){
-            new Wave(5, CappaHazard, x, y, 1),
-            new Wave(7, CappaHazard, x, y, 0.5f),
-            new Wave(7, CappaHazard, x, y, 1.5f),
+        Levels.Add(new Level(1, new List<Wave>(){
+            new Wave(2, 1f, SpreadFactory.EqualSpread(CappaHazard, x, y, 12)),
+            new Wave(4, 1f, SpreadFactory.EqualSpread(CappaHazard, x, y, 24)),
+            new Wave(5, 1f, SpreadFactory.EqualSpread(CappaHazard, x, y, 24), -7),
         }));
 
-        Levels.Add(new Level(new List<Wave>(){
-            new Wave(15, CappaHazard, x, y, 0.1f),
-            new Wave(30, CappaHazard, x, y, 0.01f),
+        Levels.Add(new Level(2, new List<Wave>(){
+            new Wave(1, 1f, SpreadFactory.ShiftedSpread(6, CappaHazard, x, y, 12)),
+            new Wave(2, 1f, SpreadFactory.ShiftedSpread(6, CappaHazard, x, y, 24)),
+            new Wave(3, 1f, SpreadFactory.ShiftedSpread(6, CappaHazard, x, y, 48)),
+            new Wave(4, 1f, SpreadFactory.ShiftedSpread(6, CappaHazard, x, y, 96)),
         }));
+
+        Levels.Add(new Level(3, new List<Wave>(){
+            new Wave(4, 1f, SpreadFactory.ShiftedSpread(6, CappaHazard, x, y, 96), -15),
+        }));
+       
 
         CurrentLevel = Levels.First();
     }
+
+   
 
     public static void LevelEnd()
     {
@@ -35,6 +45,7 @@ public class LevelManager
         }
         else
         {
+            CurrentLevel = null;
             Debug.Log("NO MORE LEVELS");
         }
     }

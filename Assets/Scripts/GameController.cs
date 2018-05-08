@@ -19,7 +19,7 @@ public class GameController : MonoBehaviour
     public int CurrentLife;
     public int Score;
     public int HazardCount;
-    public float SpawnWait;
+
     public float WaveWait;
 
     public Text ScoreText;
@@ -28,14 +28,13 @@ public class GameController : MonoBehaviour
     public Text WaveCountText;
 
     public bool IsGameOver;
+    public bool IsGameDone;
 
     public Button RestartBtn;
 
     public int HazardHitScoreValue;
 
     int _waveCount = 0;
-
-    const float SPAWN_WAIT_DIFFICULTY = 0.4f;
 
     List<GameObject> _hazards = new List<GameObject>();
     List<GameObject> _explosions = new List<GameObject>();
@@ -100,11 +99,19 @@ public class GameController : MonoBehaviour
         SceneManager.LoadScene("Main");
     }
 
+    bool isWaveCompeted()
+    {
+        
+           return _hazards.TrueForAll((hazard) => hazard == null);
+
+    }
+
     IEnumerator SpawnWaves()
     {
-        while (!IsGameOver)
+        while (!IsGameOver && !IsGameDone)
         {
-            if (_hazards.TrueForAll((hazard) => hazard == null))
+            yield return new WaitUntil(isWaveCompeted);
+            if (isWaveCompeted())
             {
                 yield return SpreadWaveHazards();
             }
@@ -114,46 +121,71 @@ public class GameController : MonoBehaviour
             }
         }
         RestartBtn.gameObject.SetActive(true);
+        if(IsGameDone)
+        {
+            GameDone();
+        }
     }
 
     IEnumerator SpreadWaveHazards()
     {
         foreach (var wave in LevelManager.CurrentLevel.Waves)
         {
-            yield return new WaitForSeconds(wave.SpawnDelaySec);
-
             ClearExplosions();
+            LevelManager.CurrentLevel.CurrentWave = wave;
+            yield return new WaitUntil(isWaveCompeted);
 
             _hazards.Clear();
             _waveCount++;
-            SpawnWait -= SPAWN_WAIT_DIFFICULTY;
-
+           
             WaveCountText.gameObject.SetActive(true);
             UpdateWaveCount();
+            yield return new WaitForSeconds(wave.SpawnDelaySec);
 
             yield return new WaitForSeconds(WaveWait);
+            if (IsGameOver)
+            {
+                break;
+            }
             WaveCountText.gameObject.SetActive(false);
 
             HazardCount = HazardCount * _waveCount;
 
             for (int i = 0; i < wave.WaveSize; i++)
             {
-
-                yield return new WaitForSeconds(wave.SpawnDelaySec);
-                _hazards.Add(InstantiateHazard(wave));
-                if (IsGameOver)
+                var hazard = InstantiateHazard(wave);
+                if(hazard != null)
                 {
-                    break;
+					_hazards.Add(InstantiateHazard(wave));
                 }
             }
+            yield return new WaitForSeconds(wave.SpawnDelaySec);
+            if (IsGameOver)
+            {
+                break;
+            }
         }
+        ClearExplosions();
+        yield return new WaitUntil(isWaveCompeted);
+
         LevelManager.LevelEnd();
+
+        if(LevelManager.CurrentLevel == null)
+        {
+            IsGameDone = true;
+        }
     }
 
     GameObject InstantiateHazard(Wave wave)
     {
-        return Instantiate(wave.Hazard, wave.GetNextSpawnPosition(), Quaternion.identity);
-
+        GameObject instance = null;
+        Vector3 position;
+        if(wave.NextSpawnPosition(out position)){
+            instance = Instantiate(wave.Spread.GameObj, position , Quaternion.identity);
+            var mover = instance.GetComponentInChildren<Mover>();
+            mover.Speed = wave.Speed;
+        }
+        return instance;
     }
 
     public void PlayerHitHazard()
@@ -171,7 +203,10 @@ public class GameController : MonoBehaviour
 
     void UpdateWaveCount()
     {
-        WaveCountText.text = "Wave " + _waveCount;
+
+        var msg = "Level " + LevelManager.CurrentLevel.Number;
+        msg += " -  Wave " + LevelManager.CurrentLevel.CurrentWave.Number;
+        WaveCountText.text = msg;
     }
 
     public void PlayerHit()
@@ -197,5 +232,11 @@ public class GameController : MonoBehaviour
         Destroy(Player);
         GameOverText.text = "Game Over";
         IsGameOver = true;
+    }
+
+    public void GameDone()
+    {
+        Destroy(Player);
+        GameOverText.text = "Bravo";
     }
 }
