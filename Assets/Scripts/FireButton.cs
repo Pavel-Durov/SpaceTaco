@@ -13,7 +13,7 @@ public class FireButton : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
         IsPressed = false;
     }
 
-	void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
+    void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
     {
         IsPressed = true;
     }

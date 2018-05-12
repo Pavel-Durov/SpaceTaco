@@ -1,5 +1,3 @@
-using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public class Level
@@ -11,6 +9,5 @@ public class Level
     }
     public int Number{get; private set;}
 
-    public List<Wave> Waves { get; private set; }
-    public Wave CurrentWave { get; set; }
+    public List<Wave> { Waves { get; priv ate set; }
 }

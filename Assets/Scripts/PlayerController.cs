@@ -10,10 +10,10 @@ public class PlayerController : MonoBehaviour
     public float Acceleration;
     public float FireRate;
 
-    float _nextFireTime;
-    Rigidbody _rigidBody;
-    FireButton _fireButton;
-    Joystick _joystick;
+    private float _nextFireTime;
+    private Rigidbody _rigidBody;
+    private FireButton _fireButton;
+    private Joystick _joystick;
 
     void Start()
     {
@@ -31,13 +31,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void InstantiateFire()
+    private void InstantiateFire()
     {
         Instantiate(Shot, ShotSpawn.position, ShotSpawn.rotation);
         GetComponent<AudioSource>().Play();
     }
 
-    float PositionX
+    private float PositionX
     {
         get
         {
@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    float PositionZ
+    private float PositionZ
     {
         get
         {

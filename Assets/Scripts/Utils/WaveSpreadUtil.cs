@@ -1,6 +1,6 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class SpreadConfig
 {
@@ -17,43 +17,74 @@ public class SpreadConfig
 
 public class WaveSpreadUtil
 {
-    public static LinkedList<Vector3> SpreadEvenRows(SpreadConfig param)
+    public static List<Vector3> CalcSpread(SpreadConfig config)
     {
-        LinkedList<Vector3> result = new LinkedList<Vector3>();
+        List<Vector3> result = new List<Vector3>();
 
-        var screen = param.ScreenWidth;
+        float lastZ = CalcStartZ(config);
+        float lastItemX = CalcStartX(config);
+        int itemsInRaw = 0;
+        int rawCount = 0;
 
-        var z = param.ScreenHeight / 2;
-        var xStart = (-param.ScreenWidth / 2) + param.ItemWidth / 2;
-        var lastItemX = xStart;
-        var rawItems = 0;
-        var rawCount = 0;
-
-        for (int i = 0; i < param.ItemsCount; i++)
+        foreach (var index in Enumerable.Range(0, config.ItemsCount))
         {
-            var position = new Vector3(lastItemX, 0, z);
+            ++itemsInRaw;
 
-            lastItemX += param.ItemWidth + param.ItemMargin;
+            result.Add(new Vector3(lastItemX, 0, lastZ));
+            lastItemX = CalcNextX(lastItemX, config);
 
-            result.AddLast(position);
-
-            ++rawItems;
-
-            if (rawItems % param.ItemsPerRaw == 0)
+            if (IsEndOfLine(itemsInRaw, config))
             {
-                z += param.ItemMargin;
-                if (param.RawShift && rawCount % 2 == 0)
+                lastZ = CalcNextZ(lastZ, config);
+
+                if (IsRowShift(rawCount, config))
                 {
-                    lastItemX = xStart + param.ItemWidth;
-                } 
+                    lastItemX = CalcStartXWithShift(config);
+                }
                 else
                 {
-                    lastItemX = xStart;
+                    lastItemX = CalcStartX(config);
                 }
                 ++rawCount;
             }
         }
+
         return result;
+    }
+
+    private static bool IsEndOfLine(int itemsInRaw, SpreadConfig config)
+    {
+        return itemsInRaw % config.ItemsPerRaw == 0;
+    }
+
+    private static bool IsRowShift(int rawCount, SpreadConfig config)
+    {
+        return config.RawShift && rawCount % 2 == 0;
+    }
+
+    private static float CalcStartX(SpreadConfig config)
+    {
+        return (-config.ScreenWidth / 2) + config.ItemWidth / 2;
+    }
+
+    private static float CalcStartXWithShift(SpreadConfig config)
+    {
+        return CalcStartX(config) + config.ItemWidth;
+    }
+
+    private static float CalcNextX(float currentX, SpreadConfig config)
+    {
+        return currentX + config.ItemWidth + config.ItemMargin;
+    }
+
+    private static float CalcNextZ(float currentZ, SpreadConfig config)
+    {
+        return currentZ += config.ItemMargin;
+    }
+
+    private static float CalcStartZ(SpreadConfig config)
+    {
+        return config.ScreenHeight / 2; ;
     }
 
 

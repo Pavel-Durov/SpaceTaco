@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 public class SpreadFactory
 {
@@ -7,7 +6,6 @@ public class SpreadFactory
 
     public static SpreadConfig EqualSpread(GameObject gameObj, float x, float y, int count)
     {
-
         return new SpreadConfig()
         {
             ItemHeight = gameObj.transform.localScale.y,
