@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 
-public class Mover : MonoBehaviour 
+public class Mover : MonoBehaviour
 {
-	public float Speed;
+    public float Speed;
 
-	void Start ()
-	{
-		var rb = GetComponent<Rigidbody> ();
+    void Start()
+    {
+        var rb = GetComponent<Rigidbody>();
         rb.velocity = transform.forward * Speed;
-	}
+    }
 }

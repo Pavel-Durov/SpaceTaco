@@ -1,4 +1,4 @@
-
+using System;
 using UnityEngine;
 
 public class DevicePlatformUtil : MonoBehaviour
@@ -9,6 +9,14 @@ public class DevicePlatformUtil : MonoBehaviour
         {
             return Application.platform == RuntimePlatform.Android ||
                               Application.platform == RuntimePlatform.IPhonePlayer;
+        }
+    }
+
+    public static void SetScreenOrientation()
+    {
+        if (IsMobile)
+        {
+            Screen.orientation = ScreenOrientation.LandscapeLeft;
         }
     }
 }

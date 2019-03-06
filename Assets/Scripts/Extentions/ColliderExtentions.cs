@@ -1,26 +1,23 @@
 public static class ColliderExtentions
 {
-    public const string BOUNDARY_TAG = "Boundary";
-    public const string PLAYER_TAG = "Player";
-    public const string SHOT_TAG = "Shot";
-    public const string HAZARD_TAG = "Hazard";
-
-    public static bool IsPlayer(this UnityEngine.Collider collider){
-        return collider.tag == PLAYER_TAG;
+    public static bool IsPlayer(this UnityEngine.Collider collider)
+    {
+        return collider.tag == Tags.PLAYER_TAG;
     }
 
     public static bool IsBoundary(this UnityEngine.Collider collider)
     {
-        return collider.tag == BOUNDARY_TAG;
+
+        return collider.tag == Tags.BOUNDARY_TAG;
     }
 
     public static bool IsShot(this UnityEngine.Collider collider)
     {
-        return collider.tag == SHOT_TAG;
+        return collider.tag == Tags.SHOT_TAG;
     }
 
     public static bool IsHazard(this UnityEngine.Collider collider)
     {
-        return collider.tag == HAZARD_TAG;
+        return collider.tag == Tags.HAZARD_TAG;
     }
 }

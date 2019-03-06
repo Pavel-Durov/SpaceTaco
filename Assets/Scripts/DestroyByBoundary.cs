@@ -4,7 +4,7 @@ public class DestroyByBoundary : MonoBehaviour
 {
     void OnTriggerExit(Collider other)
     {
-        if(!other.IsPlayer())
+        if (!other.IsPlayer())
         {
             Destroy(other.gameObject);
         }

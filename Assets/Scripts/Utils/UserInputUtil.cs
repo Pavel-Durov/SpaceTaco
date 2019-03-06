@@ -29,7 +29,7 @@ public class UserInputUtil
 
     public static Vector3 GetPlayerJoystickMove(Joystick joystick)
     {
-        
+
         return new Vector3(joystick.Horizontal, 0, joystick.Vertical);
     }
 

@@ -39,9 +39,7 @@ GameObject:
   - component: {fileID: 4198343272585252}
   - component: {fileID: 54913654723686368}
   - component: {fileID: 136281233315604488}
-  - component: {fileID: 114675817920171904}
   - component: {fileID: 114182934156964620}
-  - component: {fileID: 114429705092440674}
   m_Layer: 0
   m_Name: Kappa the hazard
   m_TagString: Hazard
@@ -145,18 +143,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Explosion: {fileID: 100004, guid: 2857e183f4cd3df4e9096e5b578bd32f, type: 2}
   PlayerExplosion: {fileID: 100012, guid: 384371afbb4354cc9a3fc68eab303756, type: 2}
---- !u!114 &114429705092440674
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1247242345847046}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1efa45788c63a9e45a4577277ba5d757, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tumble: 5
 --- !u!114 &114469512884575204
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -170,18 +156,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Explosion: {fileID: 0}
   PlayerExplosion: {fileID: 100012, guid: 160925a6fe2664f2a978566b819f0af0, type: 2}
---- !u!114 &114675817920171904
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1247242345847046}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7bb808a10ae480e4082e098000844baf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Speed: -5
 --- !u!136 &136281233315604488
 CapsuleCollider:
   m_ObjectHideFlags: 1
